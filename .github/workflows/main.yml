@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build:
+  build-and-push:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,17 +20,6 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-
-      - name: Build Docker image
-        run: docker build -t cookiq-services .
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v3
@@ -52,7 +41,7 @@ jobs:
       #     docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
       #     docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
-      - name: Push to ECR
+      - name: Build & Push to ECR
         run: |
-          docker tag cookiq-services:latest ${{ steps.login-ecr.outputs.registry }}/cookiq-services:latest
+          docker build -t ${{ steps.login-ecr.outputs.registry }}/cookiq-services:latest
           docker push ${{ steps.login-ecr.outputs.registry }}/cookiq-services:latest
