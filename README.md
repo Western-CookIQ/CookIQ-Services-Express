@@ -1,3 +1,7 @@
+![Build & Push](https://github.com/Western-CookIQ/CookIQ-Services-Express/actions/workflows/main.yml/badge.svg)
+
+![Test](https://github.com/Western-CookIQ/CookIQ-Services-Express/actions/workflows/test.yml/badge.svg)
+
 ### Current Deployment
 - Containerize the repo (may need to add specific build -> arm/64) and push to ECR with GitHub actions on "main" merges ✅
 - Added Jest unit tests on each PR with "main" ✅
