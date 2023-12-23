@@ -54,5 +54,5 @@ jobs:
 
       - name: Push to ECR
         run: |
-          docker tag cookiq-services:latest ${{ steps.login-ecr.outputs.registry }}/${{secrets.AWS_ECR_REPO}}:latest
-          docker push ${{ steps.login-ecr.outputs.registry }}/${{secrets.AWS_ECR_REPO}}:latest
+          docker tag cookiq-services:latest ${{ steps.login-ecr.outputs.registry }}/cookiq-services:latest
+          docker push ${{ steps.login-ecr.outputs.registry }}/cookiq-services:latest
