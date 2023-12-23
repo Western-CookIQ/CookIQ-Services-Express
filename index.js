@@ -1,9 +1,6 @@
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const clientRoutes = require("./routes/client.routes");
-const recipeRoutes = require("./routes/recipe.routes");
-const mealRoutes = require("./routes/meal.routes");
 const pool = require("./utils/db");
 
 require("dotenv").config(); // for express to parse env files
