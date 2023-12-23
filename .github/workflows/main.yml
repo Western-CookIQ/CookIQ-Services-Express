@@ -43,5 +43,5 @@ jobs:
 
       - name: Build & Push to ECR
         run: |
-          docker build -t ${{ steps.login-ecr.outputs.registry }}/cookiq-services:latest .
-          docker push ${{ steps.login-ecr.outputs.registry }}/cookiq-services:latest
+          docker build -t ${{ steps.login-ecr.outputs.registry }}/cookiq:latest .
+          docker push ${{ steps.login-ecr.outputs.registry }}/cookiq:latest
