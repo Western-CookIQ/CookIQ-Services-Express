@@ -12,6 +12,7 @@
   "dependencies": {
     "@aws-sdk/client-cognito-identity-provider": "^3.449.0",
     "aws-jwt-verify": "^4.0.0",
+    "axios": "^1.6.5",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",

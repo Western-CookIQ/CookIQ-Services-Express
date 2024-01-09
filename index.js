@@ -18,6 +18,7 @@ require("./routes/meal.routes.js")(app);
 require("./routes/recipe.routes.js")(app);
 require("./routes/recipetag.routes.js")(app);
 require("./routes/tag.routes.js")(app);
+require("./routes/recommendations.routes.js")(app);
 
 const PORT = process.env.PORT || 8080;
 
