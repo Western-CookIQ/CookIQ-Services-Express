@@ -21,6 +21,9 @@ module.exports = (app) => {
   // * Protected Route, AWS function verifies access tokens
   router.get("/user", auth.userDetails);
 
+  // Update User
+  router.put("/user", auth.userDetails)
+
   // Change password
   router.post("/updatePassword", auth.updatePassword);
 

@@ -242,6 +242,55 @@ class Auth {
       result(error, null);
     }
   }
+
+  //Update user function
+  static async updateUserDetails(auth, result, updatedFields) {
+    const params = {
+      AccessToken: auth.accessToken,
+    };
+  
+    try {
+      const res = await client.send(new GetUserCommand(params));
+      const user = {};
+      
+      res.UserAttributes.forEach((attribute) => {
+        switch (attribute.Name) {
+          case "email":
+            user.email = attribute.Value;
+            break;
+          case "custom:fname":
+            user.fName = attribute.Value;
+            break;
+          case "custom:lname":
+            user.lName = attribute.Value;
+            break;
+          case "custom:picture":
+            user.picture = attribute.Value;
+            break;
+        }
+      });
+  
+      // Update user details based on the request body
+      if (updatedFields.email) {
+        user.email = updatedFields.email;
+      }
+      if (updatedFields.fName) {
+        user.fName = updatedFields.fName;
+      }
+      if (updatedFields.lName) {
+        user.lName = updatedFields.lName;
+      }
+      if (updatedFields.picture) {
+        user.picture = updatedFields.picture;
+      }
+  
+      // Pass the updated user details to the client
+      result(null, { ...user });
+    } catch (error) {
+      console.error("Error updating user details:", error);
+      result(error, null);
+    }
+  }
 }
 
 module.exports = Auth;

@@ -227,14 +227,28 @@ exports.userDetails = (req, res) => {
     accessToken: req.query.accessToken,
   });
 
-  Auth.userDetails(auth, (err, data) => {
-    if (err)
-      res.status(500).send({
-        message: err.message || "An error occurred while registering a User.",
-      });
-    else {
-      res.send(data);
-    }
-  });
+  if (req.method === 'PUT') {
+    const updatedFields = req.body; // Assuming the updated fields are sent in the request body
+    Auth.updateUserDetails(auth, (err, updatedData) => {
+      if (err) {
+        res.status(500).send({
+          message: err.message || "An error occurred while updating user details.",
+        });
+      } else {
+        res.send(updatedData);
+      }
+    }, updatedFields);
+  } else {
+    // Assume it's a GET request (retrieve user details)
+    Auth.userDetails(auth, (err, data) => {
+      if (err) {
+        res.status(500).send({
+          message: err.message || "An error occurred while retrieving user details.",
+        });
+      } else {
+        res.send(data);
+      }
+    });
+  }
 };
 
