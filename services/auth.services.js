@@ -10,10 +10,12 @@ const {
   ConfirmForgotPasswordCommand,
   ResendConfirmationCodeCommand,
   GetUserCommand,
+  UpdateUserAttributesCommand,
 } = require("@aws-sdk/client-cognito-identity-provider");
 const { v4: uuidv4 } = require("uuid");
 const generateHash = require("../utils/generateHash");
 
+const fs = require('fs');
 /*
 TODO: add federated login with google
 */
@@ -283,7 +285,19 @@ class Auth {
       if (updatedFields.picture) {
         user.picture = updatedFields.picture;
       }
-  
+
+      const updateParams = {
+        AccessToken: auth.accessToken,
+        UserAttributes: [
+          { Name: "email", Value: user.email },
+          { Name: "custom:fname", Value: user.fName },
+          { Name: "custom:lname", Value: user.lName },
+          { Name: "custom:picture", Value: user.picture },
+        ],
+      };
+
+      await client.send(new UpdateUserAttributesCommand(updateParams));
+      
       // Pass the updated user details to the client
       result(null, { ...user });
     } catch (error) {
