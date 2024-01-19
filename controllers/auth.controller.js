@@ -97,10 +97,9 @@ exports.forgotPassword = (req, res) => {
       res.status(500).send({
         message:
           err.message ||
-          "Some error occurred while sending Forgot Password request to the User.",
+          "Some error occurred while sending reset code to the User.",
       });
     else {
-      // let timeToExpire = new Date(new Date().getTime() + ADD_TIME);
       res.send(data);
     }
   });
@@ -222,28 +221,33 @@ exports.logout = (req, res) => {
 
 //User Details
 exports.userDetails = (req, res) => {
-
   const auth = new Auth({
     accessToken: req.query.accessToken,
   });
 
-  if (req.method === 'PUT') {
+  if (req.method === "PUT") {
     const updatedFields = req.body; // Assuming the updated fields are sent in the request body
-    Auth.updateUserDetails(auth, (err, updatedData) => {
-      if (err) {
-        res.status(500).send({
-          message: err.message || "An error occurred while updating user details.",
-        });
-      } else {
-        res.send(updatedData);
-      }
-    }, updatedFields);
+    Auth.updateUserDetails(
+      auth,
+      (err, updatedData) => {
+        if (err) {
+          res.status(500).send({
+            message:
+              err.message || "An error occurred while updating user details.",
+          });
+        } else {
+          res.send(updatedData);
+        }
+      },
+      updatedFields
+    );
   } else {
     // Assume it's a GET request (retrieve user details)
     Auth.userDetails(auth, (err, data) => {
       if (err) {
         res.status(500).send({
-          message: err.message || "An error occurred while retrieving user details.",
+          message:
+            err.message || "An error occurred while retrieving user details.",
         });
       } else {
         res.send(data);
@@ -251,4 +255,3 @@ exports.userDetails = (req, res) => {
     });
   }
 };
-
