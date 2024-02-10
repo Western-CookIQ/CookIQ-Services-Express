@@ -11,11 +11,12 @@ const {
   ResendConfirmationCodeCommand,
   GetUserCommand,
   UpdateUserAttributesCommand,
+  ListUsersCommand,
 } = require("@aws-sdk/client-cognito-identity-provider");
 const { v4: uuidv4 } = require("uuid");
 const generateHash = require("../utils/generateHash");
 
-const fs = require('fs');
+const fs = require("fs");
 /*
 TODO: add federated login with google
 */
@@ -50,12 +51,20 @@ class Auth {
           Value: email,
         },
         {
+          Name: "name",
+          Value: (firstName + " " + lastName).toLowerCase(),
+        },
+        {
           Name: "custom:fname",
           Value: firstName,
         },
         {
           Name: "custom:lname",
           Value: lastName,
+        },
+        {
+          Name: "custom:isPublic",
+          Value: "false", // default false for privacy
         },
         {
           Name: "custom:picture",
@@ -213,6 +222,7 @@ class Auth {
     }
   }
 
+  // get user details
   static async userDetails(auth, result) {
     const params = {
       AccessToken: auth.accessToken,
@@ -250,11 +260,11 @@ class Auth {
     const params = {
       AccessToken: auth.accessToken,
     };
-  
+
     try {
       const res = await client.send(new GetUserCommand(params));
       const user = {};
-      
+
       res.UserAttributes.forEach((attribute) => {
         switch (attribute.Name) {
           case "email":
@@ -271,7 +281,7 @@ class Auth {
             break;
         }
       });
-  
+
       // Update user details based on the request body
       if (updatedFields.email) {
         user.email = updatedFields.email;
@@ -297,11 +307,55 @@ class Auth {
       };
 
       await client.send(new UpdateUserAttributesCommand(updateParams));
-      
+
       // Pass the updated user details to the client
       result(null, { ...user });
     } catch (error) {
       console.error("Error updating user details:", error);
+      result(error, null);
+    }
+  }
+
+  static async searchUsers(auth, result) {
+    const params = {
+      UserPoolId: "us-east-2_nj1oEcILO", // required
+      AttributesToGet: ["sub", "name", "custom:isPublic"], // can add custom attributes here
+      Limit: 10,
+      Filter: `name ^= ${auth.search}`, // not allowed to search on custom attributes
+    };
+
+    auth.paginationToken
+      ? (params.PaginationToken = auth.paginationToken)
+      : null;
+
+    try {
+      const response = await client.send(new ListUsersCommand(params));
+
+      // filter based on isPublic custom attribute and return only public users
+      response.Users = response.Users.filter((user) => {
+        return user.Attributes.find((attr) => {
+          return attr.Name === "custom:isPublic" && attr.Value === "true";
+        });
+      });
+
+      //filter based to ensure that the user is not the current user
+      response.Users = response.Users.filter((user) => {
+        return user.Attributes.find((attr) => {
+          return attr.Name === "sub" && attr.Value !== auth.username;
+        });
+      });
+
+      // now format the response to only return metadata and a list of user subs & names
+      response.Users = response.Users.map((user) => {
+        return {
+          sub: user.Attributes.find((attr) => attr.Name === "sub").Value,
+          name: user.Attributes.find((attr) => attr.Name === "name").Value,
+        };
+      });
+
+      result(null, response); // if required, a PaginationToken will be returned
+    } catch (error) {
+      console.error("Error searching for users:", error);
       result(error, null);
     }
   }
