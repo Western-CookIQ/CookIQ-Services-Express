@@ -255,3 +255,21 @@ exports.userDetails = (req, res) => {
     });
   }
 };
+
+exports.searchUsers = (req, res) => {
+  const auth = new Auth({});
+  auth.search = req.query.search;
+  auth.paginationToken = req.query.paginationToken || null;
+  auth.username = req.user.sub;
+
+  Auth.searchUsers(auth, (err, data) => {
+    if (err)
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while logging out the User.",
+      });
+    else {
+      res.send(data);
+    }
+  });
+};

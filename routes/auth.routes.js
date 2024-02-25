@@ -1,4 +1,5 @@
 const auth = require("../controllers/auth.controller.js");
+const authenticateToken = require("./middleware.js");
 
 module.exports = (app) => {
   const router = require("express").Router();
@@ -18,11 +19,14 @@ module.exports = (app) => {
   // Login
   router.post("/login", auth.login);
 
+  // Search all users, require access token to be verified
+  router.get("/users", authenticateToken, auth.searchUsers);
+
   // * Protected Route, AWS function verifies access tokens
   router.get("/user", auth.userDetails);
 
   // Update User
-  router.put("/user", auth.userDetails)
+  router.put("/user", auth.userDetails);
 
   // Change password
   router.post("/updatePassword", auth.updatePassword);
