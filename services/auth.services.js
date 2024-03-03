@@ -17,9 +17,18 @@ const { v4: uuidv4 } = require("uuid");
 const generateHash = require("../utils/generateHash");
 
 const fs = require("fs");
-/*
-TODO: add federated login with google
-*/
+
+const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+
+// S3 CLient authentication information
+const s3Client = new S3Client({
+  region: "us-east-2", // Specify your bucket's region
+  credentials: {
+    accessKeyId: process.env.AWS_IAM_ACCESS_KEY, // Specify your access key ID
+    secretAccessKey: process.env.AWS_IAM_ACCESS_KEY_SECRET, // Specify your secret access key
+  },
+});
 
 // Configure AWS Cognito
 const client = new CognitoIdentityProviderClient({ region: "us-east-2" });
@@ -359,6 +368,24 @@ class Auth {
       result(error, null);
     }
   }
+
+  // Generate the preigned URL
+  static async generatePresignedUrl(bucketName, fileName, fileType, expiresIn = 3600) {
+    const command = new PutObjectCommand({
+    Bucket: bucketName,
+    Key: fileName,
+    ContentType: fileType,
+  });
+
+  try {
+    // Get signed URL from the S3 Bucket
+    const url = await getSignedUrl(s3Client, command, { expiresIn });
+    return url; 
+  } catch (error) {
+    console.error("Error generating presigned URL", error);
+    throw error;
+  }
+}
 }
 
 module.exports = Auth;

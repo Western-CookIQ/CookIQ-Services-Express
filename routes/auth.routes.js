@@ -33,4 +33,7 @@ module.exports = (app) => {
 
   // Logout
   router.post("/logout", auth.logout);
+
+  //S3 URL
+  router.get('/generate-presigned-url', auth.getPresignedUrl);
 };
