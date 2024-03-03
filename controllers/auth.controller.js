@@ -1,6 +1,24 @@
 const Auth = require("../services/auth.services.js");
 
-// const SESSION_DURATION = 24 * 60 * 60 * 1000; // milliseconds to day conversion
+// S3 bucket name
+const bucketName = "cookiq-react-app";
+
+// Get Presigned URL
+exports.getPresignedUrl = async (req, res) => {
+  const { fileName, fileType } = req.query;
+  
+  if (!fileName || !fileType) {
+    return res.status(400).json({ message: 'fileName and fileType query parameters are required.' });
+  }
+
+  try {
+    // Call the generate Presigned URL function
+    const url = await Auth.generatePresignedUrl(bucketName, fileName, fileType);
+    res.json({ url });
+  } catch (error) {
+    res.status(500).json({ message: "Error generating presigned URL", error: error.message });
+  }
+};
 
 // Register
 exports.register = (req, res) => {
