@@ -20,6 +20,7 @@ require("./routes/recipetag.routes.js")(app);
 require("./routes/tag.routes.js")(app);
 require("./routes/recommendations.routes.js")(app);
 require("./routes/connections.routes.js")(app);
+require("./routes/post.routes.js")(app)
 
 const PORT = process.env.NODE_PORT || 8080;
 
