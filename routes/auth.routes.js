@@ -28,6 +28,9 @@ module.exports = (app) => {
   // Update User
   router.put("/user", auth.userDetails);
 
+  // Get user details
+  router.get("/userInfo", auth.getUserDetailsBySubs)
+
   // Change password
   router.post("/updatePassword", auth.updatePassword);
 

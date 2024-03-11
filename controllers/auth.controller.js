@@ -274,6 +274,29 @@ exports.userDetails = (req, res) => {
   }
 };
 
+exports.getUserDetailsBySubs = (req, res) => {
+  const auth = new Auth({})
+
+  if (!req.query.sub){
+    res.status(404).send({
+      message: "No sub provided"
+    })
+  }
+
+  auth.sub = req.query.sub
+  
+  Auth.getUserDetailsBySubs(auth, (err, data) => {
+    if (err)
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while logging out the User.",
+      });
+    else {
+      res.send(data);
+    }
+  })
+}
+
 exports.searchUsers = (req, res) => {
   const auth = new Auth({});
   auth.search = req.query.search;
