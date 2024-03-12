@@ -12,4 +12,10 @@ module.exports = (app) => {
     "/content-based/:recipeId",
     RecommendationController.getRecommendationsContentBased
   );
+
+  // Get Recipe by ID
+  router.get(
+    "/collaborative-based/:recipeId",
+    RecommendationController.getRecommendationsCollaborativeBased
+  );
 };
