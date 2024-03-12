@@ -326,6 +326,41 @@ class Auth {
     }
   }
 
+  static async getUserDetailsBySubs(auth, result){
+
+    const params = {
+      UserPoolId: "us-east-2_nj1oEcILO", // required
+      AttributesToGet: ["sub", "name", "email", "custom:isPublic", "custom:picture"], // can add custom attributes here
+      Limit: 60,
+      Filter: `\"sub\"^=\"${auth.sub}\"`, // not allowed to search on custom attributes
+    };
+    
+    try{
+      const response = await client.send(new ListUsersCommand(params));
+      let users = response.Users.map((user) => {
+        const userDetails = {}
+        for (let attr of user.Attributes){
+          if (attr.Name === "custom:picture"){
+            userDetails.picture = attr.Value
+          }else if(attr.Name === "name"){
+            let name = attr.Value.split(" ")
+            userDetails.fName = name[0] || ""
+            userDetails.lName = name[1] || ""
+          }else if(attr.Name === "custom:isPublic"){
+            userDetails.is_public = attr.Value
+          }else if(attr.Name === "email"){
+            userDetails.email = attr.Value
+          }
+        }
+        return userDetails
+      })
+      result(null, users);
+    }catch(error){
+      console.error("Error finding users:", error);
+      result(error, null);
+    }
+  }
+
   static async searchUsers(auth, result) {
     const params = {
       UserPoolId: "us-east-2_nj1oEcILO", // required
@@ -369,6 +404,8 @@ class Auth {
       result(error, null);
     }
   }
+
+
 
   // Generate the preigned URL
   static async generatePresignedUrl(bucketName, fileName, fileType, expiresIn = 3600) {
