@@ -1,6 +1,6 @@
 const pool = require("../utils/db");
 
-class PostService {
+class FeedService {
 
     async getFeed(user_id){
 
@@ -14,9 +14,18 @@ class PostService {
 
     }
 
+    async likePost(user_id, post_id, is_liked){
+        const query = "INSERT INTO liked_posts (user_id, post_id, is_liked) " +
+        `VALUES ('${user_id}', ${post_id}, ${is_liked})` + 
+        "ON CONFLICT (user_id, post_id) " +
+        `DO UPDATE SET is_liked = ${is_liked}`
+        const result = await pool.query(query)
+        return result.rows[0];
+    }
+
 }
   
-module.exports = new PostService();
+module.exports = new FeedService();
 
 // const { user_id, recipe_id } = postData;
 //         const query =

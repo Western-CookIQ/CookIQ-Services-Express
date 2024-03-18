@@ -7,4 +7,5 @@ module.exports = (app) => {
   app.use("/api/feed", router);
 
   router.get("/", FeedController.getFeed)
+  router.post("/:postId", FeedController.likePost)
 };
