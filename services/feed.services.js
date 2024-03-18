@@ -6,7 +6,7 @@ class FeedService {
 
         const query = "SELECT * FROM RECIPE r "+
         "JOIN ( " +
-            "SELECT p.*, COALESCE(lp.total_likes,0) FROM Post p " +
+            "SELECT p.*, CAST(COALESCE(lp.total_likes,0) AS Integer) as num_likes FROM Post p " +
             "LEFT JOIN ( " +
                     "SELECT post_id, COUNT(*) as total_likes FROM liked_posts " +
                     "WHERE is_liked = true " +
