@@ -6,9 +6,8 @@ module.exports = (app) => {
   router.use(authenticateToken);
   app.use("/api/feed", router);
 
-  // get a user's feed
-  router.get("/", FeedController.getFeed);
-
+  router.get("/", FeedController.getFeed)
+  router.post("/:postId", FeedController.likePost)
   // create a post to a user's feed
   router.post("/", FeedController.createPost);
 };
