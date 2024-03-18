@@ -2,9 +2,9 @@ class Meal {
   constructor(
     recipe_id,
     user_id,
-    is_bookmarked = false,
+    is_bookmarked = null,
     rating = null,
-    is_cooked = false
+    is_cooked = null
   ) {
     this._recipe_id = recipe_id;
     this._user_id = user_id;

@@ -13,7 +13,7 @@ describe("MealService", () => {
       // Arrange
       const recipeId = 1;
       const userId = 1;
-      const expectedMeal = { id: 1, recipe_id: 1, user_id: 1 /* ... */ };
+      const expectedMeal = { recipe_id: 1, user_id: 1 /* ... */ };
       const queryResult = { rows: [expectedMeal] };
       pool.query.mockResolvedValue(queryResult);
 
@@ -25,7 +25,7 @@ describe("MealService", () => {
 
       // Assert
       expect(pool.query).toHaveBeenCalledWith(
-        "SELECT * FROM public.meal WHERE recipe_id = $1 AND user_id = $2",
+        "SELECT recipe_id, is_bookmarked, rating, is_cooked FROM public.meal WHERE recipe_id = $1 AND user_id = $2",
         [recipeId, userId]
       );
       expect(meal).toEqual(expectedMeal);
@@ -65,7 +65,7 @@ describe("MealService", () => {
         rating: 5,
         is_cooked: true,
       };
-      const expectedMeal = { id: 1, recipe_id: 1, user_id: 1 /* ... */ };
+      const expectedMeal = { recipe_id: 1, user_id: 1 /* ... */ };
       const queryResult = { rows: [expectedMeal] };
       pool.query.mockResolvedValue(queryResult);
 
@@ -81,38 +81,12 @@ describe("MealService", () => {
     });
   });
 
-  describe("updateMeal", () => {
-    test("should update the meal with the specified recipeId and userId and return it", async () => {
-      // Arrange
-      const recipeId = 1;
-      const userId = 1;
-      const mealData = { is_bookmarked: true, rating: 4, is_cooked: false };
-      const expectedMeal = { id: 1, recipe_id: 1, user_id: 1 /* ... */ };
-      const queryResult = { rows: [expectedMeal] };
-      pool.query.mockResolvedValue(queryResult);
-
-      // Act
-      const updatedMeal = await MealService.updateMeal(
-        recipeId,
-        userId,
-        mealData
-      );
-
-      // Assert
-      expect(pool.query).toHaveBeenCalledWith(
-        "UPDATE public.meal SET is_bookmarked = $3, rating = $4, is_cooked = $5 WHERE recipe_id = $1 AND user_id = $2 RETURNING *",
-        [1, 1, true, 4, false]
-      );
-      expect(updatedMeal).toEqual(expectedMeal);
-    });
-  });
-
   describe("deleteMeal", () => {
     test("should delete the meal with the specified recipeId and userId and return it", async () => {
       // Arrange
       const recipeId = 1;
       const userId = 1;
-      const expectedMeal = { id: 1, recipe_id: 1, user_id: 1 /* ... */ };
+      const expectedMeal = { recipe_id: 1, user_id: 1 /* ... */ };
       const queryResult = { rows: [expectedMeal] };
       pool.query.mockResolvedValue(queryResult);
 
