@@ -30,3 +30,21 @@ exports.likePost = (req, res) => {
         });
         });
 }
+
+exports.createPost = (req, res) => {
+  const postData = {
+    user_id: req.user.sub,
+    recipe_id: req.body.recipe_id,
+    rating: req.body.rating,
+  };
+
+  FeedService.createPost(postData)
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "An error occurred while posting.",
+      });
+    });
+};

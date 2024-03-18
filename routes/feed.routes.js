@@ -8,4 +8,6 @@ module.exports = (app) => {
 
   router.get("/", FeedController.getFeed)
   router.post("/:postId", FeedController.likePost)
+  // create a post to a user's feed
+  router.post("/", FeedController.createPost);
 };

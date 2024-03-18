@@ -31,7 +31,8 @@ const s3Client = new S3Client({
 });
 
 // Configure AWS Cognito
-const client = new CognitoIdentityProviderClient({ region: "us-east-2" });
+const client = new CognitoIdentityProviderClient({ region: "us-east-2", credentials:{
+  accessKeyId: 'AKIA4NH3CMESZ7QC2TWN', secretAccessKey:'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' }});
 
 class Auth {
   constructor(auth) {
