@@ -255,6 +255,9 @@ class Auth {
           case "custom:picture":
             user.picture = attribute.Value;
             break;
+          case "custom:isPublic":
+            user.is_public = attribute.Value;
+            break;
         }
       });
       // Pass the result to the client
@@ -289,6 +292,8 @@ class Auth {
           case "custom:picture":
             user.picture = attribute.Value;
             break;
+          case "custom:isPublic":
+            user.is_public = attribute.Value;
         }
       });
 
@@ -305,6 +310,9 @@ class Auth {
       if (updatedFields.picture) {
         user.picture = updatedFields.picture;
       }
+      if("is_public" in updatedFields){
+        user.is_public = updatedFields.is_public
+      }
 
       const updateParams = {
         AccessToken: auth.accessToken,
@@ -313,6 +321,7 @@ class Auth {
           { Name: "custom:fname", Value: user.fName },
           { Name: "custom:lname", Value: user.lName },
           { Name: "custom:picture", Value: user.picture },
+          { Name: "custom:isPublic", Value: user.is_public + ""}
         ],
       };
 
