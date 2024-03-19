@@ -10,19 +10,17 @@ module.exports = (app) => {
   router.get("/bookmarks/:userId", MealController.getBookmarkedMeals)
   
   // Get all meals from a User
-  router.get("/:userId", MealController.getMealsByUserId);
-  
+  router.get("/", MealController.getMealsByUserId);
+
   // Get Meal by Recipe ID and User ID
-  router.get("/:recipeId/:userId", MealController.getMealByRecipeIdAndUserId);
+  router.get("/:recipeId", MealController.getMealByRecipeIdAndUserId);
 
   // Create Meal
   router.post("/", MealController.createMeal);
 
   // Update Meal
-  router.put("/:recipeId/:userId", MealController.updateMeal);
+  router.put("/", MealController.updateMeal);
 
   // Delete Meal
-  router.delete("/:recipeId/:userId", MealController.deleteMeal);
-
-  
+  router.delete("/:recipeId", MealController.deleteMeal);
 };

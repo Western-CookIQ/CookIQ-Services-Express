@@ -13,3 +13,38 @@ exports.getFeed = (req, res) => {
         });
         });
 };
+
+exports.likePost = (req, res) => {
+
+    const user_id = req.user.sub
+    const post_id = Number(req.params.postId)
+    const is_liked = Boolean(req.query.is_liked)
+
+    FeedService.likePost(user_id, post_id, is_liked)
+        .then((data) => {
+        res.send(data);
+        })
+        .catch((err) => {
+        res.status(500).send({
+            message: err.message || "An error occurred while retrieving followers.",
+        });
+        });
+}
+
+exports.createPost = (req, res) => {
+  const postData = {
+    user_id: req.user.sub,
+    recipe_id: req.body.recipe_id,
+    rating: req.body.rating,
+  };
+
+  FeedService.createPost(postData)
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "An error occurred while posting.",
+      });
+    });
+};

@@ -4,7 +4,7 @@ const Meal = require("../models/meal.model.js");
 // Get Meal by Recipe ID and User ID
 exports.getMealByRecipeIdAndUserId = (req, res) => {
   const recipeId = req.params.recipeId;
-  const userId = req.params.userId;
+  const userId = req.user.sub;
 
   MealService.getMealByRecipeIdAndUserId(recipeId, userId)
     .then((data) => {
@@ -19,7 +19,7 @@ exports.getMealByRecipeIdAndUserId = (req, res) => {
 
 // Get All Meals by User ID
 exports.getMealsByUserId = (req, res) => {
-  const userId = req.params.userId;
+  const userId = req.user.sub;
 
   MealService.getMealsByUserId(userId)
     .then((data) => {
@@ -43,7 +43,7 @@ exports.createMeal = (req, res) => {
 
   const mealData = new Meal(
     req.body.recipe_id,
-    req.body.user_id,
+    req.user.sub,
     req.body.is_bookmarked,
     req.body.rating,
     req.body.is_cooked
@@ -62,8 +62,7 @@ exports.createMeal = (req, res) => {
 
 // Update Meal
 exports.updateMeal = (req, res) => {
-  const recipeId = req.params.recipeId;
-  const userId = req.params.userId;
+  const user_id = req.user.sub;
 
   // Validate request
   if (!req.body) {
@@ -73,18 +72,18 @@ exports.updateMeal = (req, res) => {
   }
 
   const mealData = new Meal(
-    recipeId,
-    userId,
-    req.body.is_bookmarked,
-    req.body.rating,
-    req.body.is_cooked
+    req.body.recipe_id,
+    user_id,
+    req.body.is_bookmarked !== null ? req.body.is_bookmarked : null,
+    req.body.rating ? req.body.rating : null,
+    req.body.is_cooked !== null ? req.body.is_cooked : null
   );
 
-  MealService.updateMeal(recipeId, userId, mealData)
+  MealService.updateMeal(mealData)
     .then((data) => {
       if (!data) {
         res.status(404).send({
-          message: `Meal with recipe id ${recipeId} and user id ${userId} not found.`,
+          message: `Meal with recipe id ${req.body.recipe_id} and user id ${userId} not found.`,
         });
       } else {
         res.send(data);
