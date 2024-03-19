@@ -42,6 +42,24 @@ class MealService {
     const result = await pool.query(query, values);
     return result.rows[0];
   }
+
+  async getBookmarkedMeals(userId) {
+    const bookmarkQuery =
+      "SELECT recipe_id FROM public.meal WHERE user_id = $1 AND is_bookmarked = true";
+    const userIds = [userId];
+    const bookmarkedRecipes = await pool.query(bookmarkQuery, userIds);
+    
+    const recipes = [];
+    for (const row of bookmarkedRecipes.rows) {
+      const recipeQuery = "SELECT * FROM public.recipe WHERE id = $1";
+      const recipeValues = [row.recipe_id];
+      const recipeResult = await pool.query(recipeQuery, recipeValues);
+      if (recipeResult.rows.length > 0) {
+        recipes.push(recipeResult.rows[0]);
+      }
+    }
+    return recipes;
+  }
 }
 
 module.exports = new MealService();

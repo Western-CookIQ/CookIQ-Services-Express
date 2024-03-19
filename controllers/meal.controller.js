@@ -118,3 +118,18 @@ exports.deleteMeal = (req, res) => {
       });
     });
 };
+
+// Get All Meals by User ID
+exports.getBookmarkedMeals = (req, res) => {
+  const userId = req.params.userId;
+  
+  MealService.getBookmarkedMeals(userId)
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "An error occurred while retrieving Meals.",
+      });
+    });
+};

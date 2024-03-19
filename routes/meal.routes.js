@@ -6,6 +6,9 @@ module.exports = (app) => {
   router.use(authenticateToken);
   app.use("/api/meal", router);
 
+  // Get Bookmarked Meals
+  router.get("/bookmarks/:userId", MealController.getBookmarkedMeals)
+  
   // Get all meals from a User
   router.get("/:userId", MealController.getMealsByUserId);
   
@@ -20,4 +23,6 @@ module.exports = (app) => {
 
   // Delete Meal
   router.delete("/:recipeId/:userId", MealController.deleteMeal);
+
+  
 };
