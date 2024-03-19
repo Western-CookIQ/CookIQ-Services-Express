@@ -7,7 +7,10 @@ module.exports = (app) => {
   app.use("/api/feed", router);
 
   router.get("/", FeedController.getFeed)
-  router.post("/:postId", FeedController.likePost)
   // create a post to a user's feed
   router.post("/", FeedController.createPost);
+
+  router.get('/:postId', FeedController.getIsLikedPost)
+
+  router.post("/:postId", FeedController.likePost)
 };

@@ -30,6 +30,14 @@ class FeedService {
         return result.rows[0];
     }
 
+    async getIsLikedPost(user_id, post_id){
+        const query = "SELECT * FROM liked_posts " +
+        `WHERE post_id = ${post_id} AND user_id = '${user_id}'`
+        const result = await pool.query(query)
+        console.log(result)
+        return result.rows.length > 0 && result.rows[0].is_liked;
+    }
+
     async createPost(postData) {
       const { user_id, recipe_id } = postData;
       let query =
