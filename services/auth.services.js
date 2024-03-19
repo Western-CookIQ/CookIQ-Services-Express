@@ -364,7 +364,7 @@ class Auth {
   static async searchUsers(auth, result) {
     const params = {
       UserPoolId: "us-east-2_nj1oEcILO", // required
-      AttributesToGet: ["sub", "name", "custom:isPublic"], // can add custom attributes here
+      AttributesToGet: ["sub", "name", "custom:isPublic", "custom:picture"], // can add custom attributes here
       Limit: 10,
       Filter: `name ^= ${auth.search}`, // not allowed to search on custom attributes
     };
@@ -395,6 +395,7 @@ class Auth {
         return {
           sub: user.Attributes.find((attr) => attr.Name === "sub").Value,
           name: user.Attributes.find((attr) => attr.Name === "name").Value,
+          profile_picture: user.Attributes.find((attr) => attr.Name === "custom:picture").Value,
         };
       });
 
