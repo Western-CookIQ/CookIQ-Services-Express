@@ -35,3 +35,24 @@ exports.getRecommendationsCollaborativeBased = (req, res) => {
       res.send(error);
     });
 };
+
+// Content Based Recommendations
+exports.getRecommendationsLLM = (req, res) => {
+  // i want to get the query paraemter called query on the req
+  const query = req.query.query;
+
+  axios
+    .get(
+      `https://a85qb0exbe.execute-api.us-east-2.amazonaws.com/dev/llm?query=${encodeURIComponent(
+        query
+      )}`
+    )
+    .then(async (response) => {
+      const data = response.data;
+      res.send(data);
+    })
+    .catch((error) => {
+      // Handle error
+      res.send(error);
+    });
+};

@@ -18,4 +18,6 @@ module.exports = (app) => {
     "/collaborative-based/:recipeId",
     RecommendationController.getRecommendationsCollaborativeBased
   );
+
+  router.get("/llm", RecommendationController.getRecommendationsLLM);
 };
