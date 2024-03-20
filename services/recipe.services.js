@@ -87,6 +87,30 @@ class RecipeService {
     const result = await pool.query(query, values);
     return result.rows[0];
   }
+
+  async getRecommendationRecipes(recipeId){
+    // const query = `SELECT r.*, t.description as tag_ FROM (SELECT * FROM recipe WHERE id = ${recipeId}) r ` +
+    // "INNER JOIN recipetag rt ON r.id = rt.recipe_id " +
+    // "INNER JOIN tag t ON rt.tag_id = t.id " +
+    // "LIMIT 3"
+    const query1 = `SELECT * FROM recipe WHERE id = ${recipeId}`
+    const recipe = await pool.query(query1);
+    
+    const query2 = 
+    `SELECT t.* FROM (SELECT * FROM recipetag WHERE recipe_id = ${recipeId}) rt `+
+    'INNER JOIN tag t ON rt.tag_id = t.id '+
+    'LIMIT 3'
+    const tags = await pool.query(query2)
+
+    if (recipe.rows.length > 0){
+      return {
+        ...recipe.rows[0],
+        tags: tags.rows.map(r => r.description)
+      }
+    }else{
+      return null
+    }
+  }
 }
 
 module.exports = new RecipeService();
