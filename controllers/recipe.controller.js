@@ -58,6 +58,26 @@ exports.getRecipeById = (req, res) => {
     });
 };
 
+exports.getRecommendationRecipes = (req, res) => {
+  const recipeId = req.params.recipeId;
+
+  RecipeService.getRecommendationRecipes(recipeId)
+    .then((data) => {
+      if (!data) {
+        res.status(404).send({
+          message: `Recipe with id ${recipeId} not found.`,
+        });
+      } else {
+        res.send(data);
+      }
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "An error occurred while retrieving a Recipe.",
+      });
+    });
+};
+
 // Update Recipe
 exports.updateRecipe = (req, res) => {
   const recipeId = req.params.recipeId;

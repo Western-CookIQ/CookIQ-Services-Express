@@ -18,4 +18,6 @@ module.exports = (app) => {
 
   // Delete Recipe
   router.delete("/:recipeId", RecipeController.deleteRecipe);
+
+  router.get("/recommendation-recipe/:recipeId", RecipeController.getRecommendationRecipes)
 };
